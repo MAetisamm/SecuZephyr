@@ -1,7 +1,5 @@
 # SecuZephyr — Security Evaluation of Zephyr RTOS on STM32 Nucleo-L552ZE-Q
 
-**Authors:** Muhammad Aetisam & Abdul Wasey
-
 ## Overview
 This project performs a hardware-based security evaluation of Zephyr RTOS 
 running on STM32 Cortex-M33. It tests whether built-in security mechanisms 
