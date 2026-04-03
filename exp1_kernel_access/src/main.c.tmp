@@ -1,0 +1,37 @@
+#include <zephyr/kernel.h>
+#include <zephyr/sys/printk.h>
+
+#define STACK_SIZE   1024
+#define THREAD_PRIO  5
+
+K_THREAD_STACK_DEFINE(attack_stack, STACK_SIZE);
+struct k_thread attack_thread_data;
+
+static volatile uint32_t kernel_secret = 0xDEADBEEF;
+
+void attack_thread_entry(void *p1, void *p2, void *p3)
+{
+    printk("[ATTACK] started\n");
+    printk("[ATTACK] secret: 0x%08X\n", kernel_secret);
+    printk("[ATTACK] done\n");
+}
+
+int main(void)
+{
+    printk("BOOT OK\n");
+
+    k_thread_create(
+        &attack_thread_data,
+        attack_stack,
+        K_THREAD_STACK_SIZEOF(attack_stack),
+        attack_thread_entry,
+        NULL, NULL, NULL,
+        THREAD_PRIO,
+        0,          /* <-- NO K_USER flag */
+        K_NO_WAIT
+    );
+
+    k_sleep(K_SECONDS(2));
+    printk("MAIN ALIVE\n");
+    return 0;
+}
