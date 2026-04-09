@@ -25,8 +25,14 @@ void attack_thread_entry(void *p1, void *p2, void *p3)
     // Should NEVER reach here
     uint32_t control_after;
     __asm__ volatile ("MRS %0, CONTROL" : "=r"(control_after));
-    printk("[ATTACK] !! BREACH !! CONTROL after: 0x%08X\n", control_after);
-    printk("[ATTACK] Privilege escalation SUCCEEDED!\n");
+    printk("[ATTACK] CONTROL after  : 0x%08X\n", control_after);
+
+    if ((control_after & 0x1) == 0) {
+        printk("[ATTACK] !! BREACH !! nPRIV=0 — privilege escalation SUCCEEDED!\n");
+    } else {
+        printk("[ATTACK] PROTECTED — nPRIV still=1, write was ignored by hardware\n");
+        printk("[ATTACK] Privilege escalation FAILED as expected\n");
+    }
 }
 
 int main(void)
