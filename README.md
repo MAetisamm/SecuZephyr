@@ -33,8 +33,8 @@ west flash --runner openocd
 | 2 | Privilege Escalation via CONTROL Register | ✅ Upcoming |
 | 3 | Syscall Abuse with Invalid Pointers | ✅ Upcoming |
 | 4 | Stack Overflow & MPU Stack Guard | ✅ Upcoming |
-| 5 | Cross-Thread Memory Access | 🔄 Upcoming |
-| 6 | TrustZone Boundary Crossing (Optional) | 🔄 Upcoming |
+| 5 | Cross-Thread Memory Access | ✅ UpcoXming |
+| 6 | TrustZone Boundary Crossing | ✅ Upcoming |
 
 ## Results Summary
 See each experiment folder for full UART logs and findings.
