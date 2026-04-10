@@ -30,7 +30,7 @@ west flash --runner openocd
 | # | Name | Status |
 |---|------|--------|
 | 1 | Direct Kernel Memory Access | ✅ Complete |
-| 2 | Privilege Escalation via CONTROL Register | 🔄 Upcoming |
+| 2 | Privilege Escalation via CONTROL Register | ✅ Upcoming |
 | 3 | Syscall Abuse with Invalid Pointers | 🔄 Upcoming |
 | 4 | Stack Overflow & MPU Stack Guard | 🔄 Upcoming |
 | 5 | Cross-Thread Memory Access | 🔄 Upcoming |
