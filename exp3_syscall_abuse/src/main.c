@@ -13,7 +13,6 @@ K_MSGQ_DEFINE(test_msgq, MSG_SIZE, MSG_COUNT, 4);
 K_THREAD_STACK_DEFINE(attack_stack, STACK_SIZE);
 struct k_thread attack_thread_data;
 
-/* Kernel variable — attacker wants to pass this as buffer */
 static volatile uint32_t kernel_secret = 0xDEADBEEF;
 
 void attack_thread_entry(void *p1, void *p2, void *p3)
