@@ -2,7 +2,19 @@
 #include <zephyr/sys/printk.h>
 
 typedef void (*secure_fn_t)(void);
-
+/*
+ * Experiment 7 -- Non-Secure Direct Jump to Secure Function
+ *
+ * Goal: Verify that Non-Secure code cannot directly branch
+ * into TF-M Secure functions, bypassing the NSC gateway.
+ *
+ * TF-M Secure flash starts at 0x0C000000 (Secure alias).
+ * Non-Secure code attempting a direct branch to this region
+ * without going through an NSC veneer raises a SecureFault.
+ *
+ * The SAU detects the invalid Secure entry point and
+ * raises a fault before any Secure code executes.
+ */
 void attack_thread_entry(void *p1, void *p2, void *p3)
 {
     printk("[ATTACK] Thread started in Non-Secure mode\n");
