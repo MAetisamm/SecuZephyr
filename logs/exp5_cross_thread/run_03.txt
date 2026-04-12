@@ -1,0 +1,36 @@
+*** Booting Zephyr OS build v4.4.0-rc2 ***
+=== BOOT OK ===
+========================================
+  Experiment 5: Cross-Thread Access    
+  Goal: Thread A cannot read Thread B  
+========================================
+
+[MAIN] Both threads spawned
+[MAIN] Thread B stack base: 0x20001300
+[MAIN] Waiting...
+
+[THREAD B] Started in USER mode
+[THREAD B] Secret value : 0xBEEFCAFE
+[THREAD B] Secret addr  : 0x20001ADC
+[THREAD A] Started in USER mode
+[THREAD A] Targeting Thread B stack base: 0x20001300
+[THREAD A] Attempting cross-thread read...
+***** MPU FAULT *****
+  Data Access Violation
+  MMFAR Address: 0x20001300
+r0/a1:  0x00000000  r1/a2:  0x00000000  r2/a3:  0x00000000
+r3/a4:  0x0000000b r12/ip:  0x08005969 r14/lr:  0x08000899
+ xpsr:  0x61000000
+Faulting instruction address (r15/pc): 0x08000898
+
+========================================
+  FAULT CAUGHT
+  Reason : 19
+  MMFAR  : 0xE000ED34
+  CFSR   : 0x00000000
+  PC     : 0x08000898
+  LR     : 0x08000899
+========================================
+
+Killing thread. System continues.
+

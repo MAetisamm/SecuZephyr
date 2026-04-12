@@ -1,0 +1,41 @@
+*** Booting Zephyr OS build v4.4.0-rc2 ***
+=== BÏ*** Booting Zephyr OS build v4.4.0-rc2 ***
+=== BOOT OK ===
+========================================
+  Experiment 3: Syscall Abuse          
+  Goal: Pass kernel pointer to syscall 
+========================================
+
+[MAIN] Attack thread spawned
+[MAIN] Waiting...
+
+[ATTACK] Thread started in USER mode
+***** MPU FAULT *****
+  Data Access Violation
+  MMFAR Address: 0x20000040
+r0/a1:  0x00000000  r1/a2:  0x20000040  r2/a3:  0x00000000
+r3/a4:  0x00000005 r12/ip:  0x08006d27 r14/lr:  0x08001625
+ xpsr:  0x61000000
+r4/v1:  0x20000040  r5/v2:  0x08001619  r6/v3:  0x200016b4
+r7/v4:  0x00000000  r8/v5:  0x00000008  r9/v6:  0x00000000
+r10/v7: 0x00000000  r11/v8: 0x200007ac    psp:  0x20001678
+EXC_RETURN: 0xfffffffd
+Faulting instruction address (r15/pc): 0x08001626
+call trace:
+     0: lr: 0x08001626
+     1: lr: 0x08001bab
+     2: lr: 0x08001619
+     3: lr: 0x20000318
+
+
+========================================
+  FAULT CAUGHT
+  Reason : 19
+  MMFAR  : 0xE000ED34
+  CFSR   : 0x00000000
+  PC     : 0x08001626
+  LR     : 0x08001625
+========================================
+
+Killing thread. System continues.
+

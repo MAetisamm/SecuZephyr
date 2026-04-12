@@ -1,0 +1,20 @@
+*** Booting Zephyr OS build v4.4.0-rc2 ***
+=== BOOT OK ===
+========================================
+  Experiment 2: CONTROL Register Write
+  Goal: Privilege escalation attempt
+========================================
+
+[MAIN] Attack thread spawned
+[MAIN] Waiting...
+
+[ATTACK] Thread started in USER mode
+[ATTACK] CONTROL before: 0x00000003
+[ATTACK] nPRIV bit: 1 (1=unprivileged, 0=privileged)
+[ATTACK] Attempting to write CONTROL register...
+[ATTACK] CONTROL after  : 0x00000003
+[ATTACK] PROTECTED — nPRIV still=1, write was ignored by hardware
+[ATTACK] Privilege escalation FAILED as expected
+[MAIN] Supervisor still alive.
+[MAIN] System is stable.
+[MAIN] Experiment 2 COMPLETE.
