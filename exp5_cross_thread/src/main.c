@@ -4,12 +4,16 @@
 #define STACK_SIZE     2048
 #define THREAD_PRIO_A  6
 #define THREAD_PRIO_B  5
+#define THREAD_PRIO  5
 
 K_THREAD_STACK_DEFINE(thread_a_stack, STACK_SIZE);
 struct k_thread thread_a_data;
 
 K_THREAD_STACK_DEFINE(thread_b_stack, STACK_SIZE);
 struct k_thread thread_b_data;
+
+K_THREAD_STACK_DEFINE(work_stack,   STACK_SIZE);
+struct k_thread work_thread_data;
 
 // Thread B — victim
 void thread_b_entry(void *p1, void *p2, void *p3)
@@ -46,6 +50,18 @@ void thread_a_entry(void *p1, void *p2, void *p3)
     printk("[THREAD A] !! BREACH !! Read: 0x%08X\n", stolen);
 }
 
+void do_work()
+{
+    int i=0;
+    while(true)
+    {
+        ++i;
+        printk("[DO_WORK] Incrementing %d\n",i);
+        k_sleep(K_SECONDS(1));
+
+    }
+}
+
 int main(void)
 {
     printk("=== BOOT OK ===\n");
@@ -57,6 +73,21 @@ int main(void)
     k_thread_access_grant(&thread_b_data, &thread_b_stack);
     k_thread_access_grant(&thread_a_data, &thread_a_stack);
 
+    k_thread_access_grant(&work_thread_data,
+                        &work_stack);
+    k_tid_t tid1 = k_thread_create(
+        &work_thread_data,
+        work_stack,
+        K_THREAD_STACK_SIZEOF(work_stack),
+        do_work,
+        NULL, NULL, NULL,
+        THREAD_PRIO,
+        K_USER | K_INHERIT_PERMS,
+        K_NO_WAIT
+    );
+    printk("[MAIN] Work thread spawned: %p\n", (void *)tid1);
+    printk("[MAIN] Work in Progress\n");
+
     k_thread_create(
         &thread_b_data,
         thread_b_stack,
@@ -67,6 +98,7 @@ int main(void)
         K_USER | K_INHERIT_PERMS,
         K_NO_WAIT
     );
+    k_sleep(K_SECONDS(10));
 
     uintptr_t b_stack_base = (uintptr_t)thread_b_stack;
 

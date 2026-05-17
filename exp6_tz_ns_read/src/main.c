@@ -38,6 +38,21 @@ void attack_thread_entry(void *p1, void *p2, void *p3)
 K_THREAD_STACK_DEFINE(attack_stack, STACK_SIZE);
 struct k_thread attack_thread;
 
+K_THREAD_STACK_DEFINE(work_stack,   STACK_SIZE);
+struct k_thread work_thread_data;
+
+void do_work()
+{
+    int i=0;
+    while(true)
+    {
+        ++i;
+        printk("[DO_WORK] Incrementing %d\n",i);
+        k_sleep(K_SECONDS(1));
+
+    }
+}
+
 int main(void)
 {
     printk("=== BOOT OK (Non-Secure World) ===\n");
@@ -47,6 +62,22 @@ int main(void)
     printk("  Attack: read from 0x30000000            \n");
     printk("  Expected: SecureFault from SAU          \n");
     printk("==========================================\n\n");
+    k_thread_access_grant(&work_thread_data,
+                        &work_stack);
+
+    k_tid_t tid1 = k_thread_create(
+        &work_thread_data,
+        work_stack,
+        K_THREAD_STACK_SIZEOF(work_stack),
+        do_work,
+        NULL, NULL, NULL,
+        PRIO,
+        K_USER | K_INHERIT_PERMS,
+        K_NO_WAIT
+    );
+    printk("[MAIN] Work thread spawned: %p\n", (void *)tid1);
+    printk("[MAIN] Work in Progress\n");
+    k_sleep(K_SECONDS(10));
 
     k_thread_create(
         &attack_thread,
