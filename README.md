@@ -1,8 +1,7 @@
 # SecuZephyr — Security Evaluation of Zephyr RTOS on STM32 Nucleo-L552ZE-Q
 
-**Authors:** Muhammad Aetisam & Abdul Wasey
+**Author:** Muhammad Aetisam
 **Repository:** https://github.com/MAetisamm/SecuZephyr
-**Paper:** *Security Evaluation of Zephyr RTOS on STM32 Nucleo-L552ZE-Q: MPU Isolation, TrustZone Enforcement, and a Novel TOCTOU Vulnerability in TF-M v2.2.2*
 
 ---
 
@@ -19,9 +18,9 @@ and executed on real hardware across three security layers:
 
 All experiments were executed on physical hardware with UART logs captured for each run.
 
-### 🚨 Key Finding — Novel TOCTOU Vulnerability in TF-M v2.2.2
+### 🚨 Key Finding — TOCTOU Vulnerability in TF-M v2.2.2
 
-Experiment 9 reveals a previously unreported TOCTOU vulnerability in TF-M v2.2.2's
+Experiment 9 reveals a TOCTOU vulnerability in TF-M v2.2.2's
 `psa_its_set()` API. Attacker-controlled data was successfully stored in Secure ITS
 in **19 of 10,010 race attempts** across 10 independent hardware runs (mean success
 rate: **0.19%**, manifesting in **8 of 10 sessions**).
@@ -32,7 +31,7 @@ The attack requires no privilege escalation and operates entirely within Non-Sec
 world privileges using two cooperative Zephyr threads.
 
 > **Disclosure:** This finding will be reported to the TF-M security team at
-> https://trustedfirmware.org/security/ upon paper acceptance.
+> https://trustedfirmware.org/security/.
 
 ---
 
@@ -119,7 +118,7 @@ All three TrustZone boundary crossing experiments (Exp 6–8) produced `FATAL ER
 (SecureFault escalated) on every run, confirming SAU and GTZC enforcement is working correctly
 on real STM32L552 silicon.
 
-### 4. 🚨 Novel TOCTOU Vulnerability in TF-M v2.2.2
+### 4. 🚨 TOCTOU Race Condition in TF-M v2.2.2 ITS
 `psa_its_set()` in TF-M v2.2.2 default configuration does not copy the NS buffer into
 Secure RAM before validation. A racing NS thread can corrupt the buffer between TF-M's
 pointer validation (CHECK) and the Secure copy operation (USE).
@@ -233,7 +232,7 @@ STM32_Programmer_CLI.exe -c port=SWD mode=HotPlug \
 If TZEN=1 is enabled without valid NS image at `0x08041000`, the board enters
 a double-fault loop blocking all SWD access. Recovery using the CN15+CN11 trick:
 
-### Hardware Setup (novel — not in ST AN5347)
+### Hardware Setup (CN15+CN11 method — not covered in ST AN5347)
 ```
 1. Connect CN1  (USB Micro-B) → PC   [powers ST-LINK]
 2. Connect CN15 (USB Type-C)  → PC   [powers MCU independently]
@@ -278,7 +277,7 @@ SecuZephyr/
 │   ├── exp6_tz_ns_read/         # TF-M: NS read of Secure RAM (0x30000000)
 │   ├── exp7_tz_ns_jump/         # TF-M: NS direct jump to Secure fn
 │   ├── exp8_tz_ns_periph/       # TF-M: NS write to Secure RNG (0x520C0000)
-│   └── exp9_toctou/             # TF-M: TOCTOU on psa_its_set() — NOVEL FINDING
+│   └── exp9_toctou/             # TF-M: TOCTOU on psa_its_set()
 └── logs/
     ├── exp1_kernel_access/      # 10 UART run logs
     ├── exp2_control_reg/
@@ -314,7 +313,3 @@ TF-M boot messages, attack output, fault registers, and final result.
 4. STMicroelectronics. STM32L5 Reference Manual RM0438, Rev 7, 2022.
 5. STMicroelectronics. AN5347: STM32L5 TrustZone Features, 2021.
 6. ARM Ltd. ARMv8-M MPU Technical Reference Manual, ARM DDI 0553B, 2017.
-7. D. Cerdeira et al. SoK: Understanding TrustZone-assisted TEE Systems. IEEE S&P 2020.
-8. X. Luo et al. On Security of TrustZone-M-Based IoT Systems. IEEE IoT Journal 2022.
-9. Z. Ma et al. Return-to-Non-Secure Vulnerabilities on ARM Cortex-M TrustZone. DAC 2023.
-10. X. Tan et al. SoK: Where's the Up?! Security of ARM Cortex-M RTOS. USENIX WOOT 2024.
